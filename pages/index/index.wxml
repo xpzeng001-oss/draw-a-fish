@@ -1,0 +1,54 @@
+<view class="container">
+  <!-- 水面光效 -->
+  <view class="water-surface">
+    <view class="light-ray" wx:for="{{5}}" wx:key="*this" style="left:{{item * 20 + 5}}%; animation-delay:{{item * 0.6}}s;"></view>
+  </view>
+
+  <!-- 鱼缸 Canvas -->
+  <canvas type="2d" id="tankCanvas" class="tank-canvas" bindtouchstart="onTankTap"></canvas>
+
+  <!-- 气泡装饰 -->
+  <view class="bubble-container">
+    <view class="bubble" wx:for="{{bubbles}}" wx:key="id"
+      style="left:{{item.x}}%; width:{{item.size}}rpx; height:{{item.size}}rpx; animation-duration:{{item.duration}}s; animation-delay:{{item.delay}}s;">
+    </view>
+  </view>
+
+  <!-- 底部沙地 -->
+  <view class="sand-bottom">
+    <view class="seaweed" wx:for="{{6}}" wx:key="*this" 
+      style="left:{{item * 16 + 5}}%; height:{{60 + item * 15}}rpx; animation-delay:{{item * 0.4}}s;">
+    </view>
+  </view>
+
+  <!-- 鱼数量统计 -->
+  <view class="fish-count">
+    <text class="count-text">🐠 {{fishCount}} 条鱼在游泳</text>
+  </view>
+
+  <!-- 鱼信息弹窗 -->
+  <view class="fish-info-overlay" wx:if="{{showFishInfo}}" bindtap="closeFishInfo">
+    <view class="fish-info-card" catchtap="">
+      <view class="fish-info-close" bindtap="closeFishInfo">✕</view>
+      <view class="fish-info-name">{{selectedFish.name}}</view>
+      <view class="fish-info-score">{{selectedFish.score}} 分</view>
+      <view class="fish-info-time">{{selectedFish.timeText}} 加入鱼缸</view>
+      <view class="fish-info-pet-count">被摸了 {{selectedFish.petCount}} 次</view>
+      <view class="fish-info-btn {{hasPettedSelected ? 'disabled' : ''}}" bindtap="petSelectedFish">
+        {{hasPettedSelected ? '已摸过 ✓' : '摸一下 🐟'}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="btn-draw" bindtap="goToDraw">
+      <view class="btn-icon">✏️</view>
+      <text class="btn-text">画一条鱼</text>
+    </view>
+    <view class="btn-gallery" bindtap="goToTank">
+      <view class="btn-icon">🏆</view>
+      <text class="btn-text">排行榜</text>
+    </view>
+  </view>
+</view>

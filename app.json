@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/draw/draw",
+    "pages/tank/tank"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#1a5276",
+    "navigationBarTitleText": "🐟 一起画鱼",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0c2d48"
+  },
+  "sitemapLocation": "sitemap.json"
+}
