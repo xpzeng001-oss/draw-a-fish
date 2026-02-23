@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/draw/draw",
-    "pages/tank/tank"
+    "pages/tank/tank",
+    "pages/public/public"
   ],
   "window": {
     "backgroundTextStyle": "dark",

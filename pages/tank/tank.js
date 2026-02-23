@@ -1,12 +1,13 @@
 const app = getApp()
 const fishEngine = require('../../utils/fish-engine.js')
+const api = require('../../utils/api.js')
 
 Page({
   data: {
     fishList: [],
     totalFish: 0,
-    avgScore: 0,
-    topScore: 0,
+    totalPets: 0,
+    topPets: 0,
     medals: ['🥇', '🥈', '🥉']
   },
 
@@ -15,36 +16,58 @@ Page({
   },
 
   _loadFishList() {
-    const fishList = app.globalData.fishList.slice()
-    
-    // 按分数排序
-    fishList.sort((a, b) => b.score - a.score)
+    api.getFishList(1, 50)
+      .then(res => {
+        const list = (res.list || []).map(f => ({
+          id: f.fishId,
+          type: f.type || 'vector',
+          colors: f.colors || { body: '#FF6B6B', fin: '#EE5A5A', eye: '#333' },
+          pattern: f.pattern || 0,
+          size: f.size || 1,
+          speed: f.speed || 0.5,
+          name: f.name || '无名小鱼',
+          author: f.author || '',
+          score: f.score || 0,
+          petCount: f.petCount || 0,
+          createTime: new Date(f.createdAt).getTime(),
+          imageUrl: f.imageUrl ? api.getBaseUrl() + f.imageUrl : ''
+        }))
+        this._renderList(list)
+      })
+      .catch(() => {
+        // 回退本地数据
+        this._renderList(app.globalData.fishList.slice())
+      })
+  },
 
-    // 格式化时间
+  _renderList(fishList) {
+    // 按被摸次数排序
+    fishList.sort((a, b) => (b.petCount || 0) - (a.petCount || 0))
+
     fishList.forEach(f => {
       f.timeText = this._formatTime(f.createTime)
     })
 
     const total = fishList.length
-    const avg = total > 0 ? Math.round(fishList.reduce((s, f) => s + f.score, 0) / total) : 0
-    const top = total > 0 ? fishList[0].score : 0
+    const totalPets = fishList.reduce((s, f) => s + (f.petCount || 0), 0)
+    const topPets = total > 0 ? (fishList[0].petCount || 0) : 0
 
     this.setData({
       fishList,
       totalFish: total,
-      avgScore: avg,
-      topScore: top
+      totalPets,
+      topPets
     })
 
-    // 延迟渲染鱼预览
     setTimeout(() => this._renderFishPreviews(), 300)
   },
 
   _renderFishPreviews() {
     const fishList = this.data.fishList
     fishList.forEach((fish, index) => {
-      if (index > 15) return // 只渲染可见范围
-      
+      if (index > 15) return
+      if (fish.imageUrl) return // 图片鱼用 <image> 显示，跳过 canvas
+
       const query = wx.createSelectorQuery()
       query.select(`#fish-${index}`)
         .fields({ node: true, size: true })

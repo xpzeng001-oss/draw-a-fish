@@ -1,3 +1,5 @@
+const api = require('./utils/api.js')
+
 App({
   globalData: {
     fishList: [],
@@ -35,6 +37,9 @@ App({
       petted.push(fishId)
       wx.setStorageSync('pettedFishIds', petted)
     }
+
+    // 同步到服务器
+    api.petFish(fishId).catch(() => {})
   },
 
   hasPetted(fishId) {
@@ -77,6 +82,9 @@ App({
       if (idx !== -1) list.splice(idx, 1)
     }
     wx.setStorageSync('fishList', list)
+
+    // 同步到服务器
+    api.uploadFish(fishData, fishData.imagePath).catch(() => {})
   },
 
   _generateSampleFish() {

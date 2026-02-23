@@ -22,10 +22,11 @@ Page({
     showGrid: true,
     showScore: false,
     score: 0,
-    scoreEmoji: '',
     scoreColor: '',
     scoreComment: '',
     fishName: '',
+    authorName: '',
+    fishPreview: '',
     tipText: '画一条朝右游的鱼 🐟 发挥你的创意吧！'
   },
 
@@ -203,32 +204,44 @@ Page({
         this.canvas.height
       )
 
-      let emoji, color, comment
+      let color, comment
       if (score >= 85) {
-        emoji = '🎨'
         color = '#2ecc71'
         comment = '哇！这条鱼太棒了！大师级画作！'
       } else if (score >= 70) {
-        emoji = '🐟'
         color = '#3498db'
         comment = '很不错的鱼！在鱼缸里会很受欢迎！'
       } else if (score >= 55) {
-        emoji = '🐠'
         color = '#f39c12'
         comment = '还可以哦，这条鱼很有个性！'
       } else {
-        emoji = '🤔'
         color = '#e74c3c'
         comment = '嗯...确定这是一条鱼吗？不过也放进去吧！'
       }
 
-      wx.hideLoading()
-      this.setData({
-        showScore: true,
-        score,
-        scoreEmoji: emoji,
-        scoreColor: color,
-        scoreComment: comment
+      // 生成鱼的预览图
+      wx.canvasToTempFilePath({
+        canvas: this.canvas,
+        success: (imgRes) => {
+          wx.hideLoading()
+          this.setData({
+            showScore: true,
+            score,
+            scoreColor: color,
+            scoreComment: comment,
+            fishPreview: imgRes.tempFilePath
+          })
+        },
+        fail: () => {
+          wx.hideLoading()
+          this.setData({
+            showScore: true,
+            score,
+            scoreColor: color,
+            scoreComment: comment,
+            fishPreview: ''
+          })
+        }
       })
     }, 800)
   },
@@ -237,8 +250,13 @@ Page({
     this.setData({ fishName: e.detail.value })
   },
 
+  onAuthorInput(e) {
+    this.setData({ authorName: e.detail.value })
+  },
+
   confirmFish() {
     const name = this.data.fishName || '无名小鱼'
+    const author = this.data.authorName || ''
     const bodyColor = this.data.currentColor
 
     // 计算鱼的绘制边界，只裁剪有内容的区域
@@ -298,8 +316,10 @@ Page({
               size: 0.7 + Math.random() * 0.5,
               speed: 0.4 + Math.random() * 0.6,
               name: name,
+              author: author,
               score: this.data.score,
-              createTime: Date.now()
+              createTime: Date.now(),
+              petCount: 0
             }
             app.addFish(fishData)
             wx.showToast({ title: `${name} 已放入鱼缸！`, icon: 'success', duration: 1500 })
@@ -329,8 +349,10 @@ Page({
       size: 0.7 + Math.random() * 0.5,
       speed: 0.4 + Math.random() * 0.6,
       name: name,
+      author: this.data.authorName || '',
       score: this.data.score,
-      createTime: Date.now()
+      createTime: Date.now(),
+      petCount: 0
     }
     app.addFish(fishData)
     wx.showToast({ title: '已放入鱼缸！', icon: 'success' })
@@ -338,7 +360,7 @@ Page({
   },
 
   redraw() {
-    this.setData({ showScore: false })
+    this.setData({ showScore: false, fishPreview: '', fishName: '', authorName: '' })
     this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
     this.strokeHistory = []
     this.strokeCount = 0
@@ -351,6 +373,10 @@ Page({
 
   closeScore() {
     // 点击遮罩不关闭
+  },
+
+  goToTank() {
+    wx.navigateBack()
   },
 
   _darkenColor(hex, amount) {

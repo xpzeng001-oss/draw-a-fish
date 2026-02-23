@@ -1,4 +1,3 @@
-const app = getApp()
 const fishEngine = require('../../utils/fish-engine.js')
 const api = require('../../utils/api.js')
 
@@ -20,16 +19,17 @@ Page({
   canvasWidth: 0,
   canvasHeight: 0,
   dpr: 1,
+  page: 1,
+  hasMore: true,
 
   onLoad() {
     this._generateBubbles()
+    this._initCanvas()
   },
 
   onShow() {
-    if (!this.canvas) {
-      this._initCanvas()
-    } else {
-      this._fetchFishes()
+    if (this.canvas && this.fishDataList.length > 0) {
+      this._startAnimation()
     }
   },
 
@@ -42,6 +42,9 @@ Page({
   },
 
   onPullDownRefresh() {
+    this.page = 1
+    this.hasMore = true
+    this.fishDataList = []
     this._fetchFishes(() => {
       wx.stopPullDownRefresh()
     })
@@ -70,7 +73,7 @@ Page({
 
   _initCanvas() {
     const query = wx.createSelectorQuery()
-    query.select('#tankCanvas')
+    query.select('#publicCanvas')
       .fields({ node: true, size: true })
       .exec((res) => {
         if (!res[0]) return
@@ -95,13 +98,18 @@ Page({
   },
 
   _fetchFishes(cb) {
-    if (this.data.loading) return
+    if (this.data.loading || !this.hasMore) return
     this.setData({ loading: true })
 
-    api.getFishList(1, 30)
+    api.getFishList(this.page, 30)
       .then(res => {
         const serverList = res.list || []
-        this.fishDataList = serverList.map(f => ({
+        if (serverList.length === 0) {
+          this.hasMore = false
+        }
+
+        // 将服务器数据转换为本地鱼数据格式
+        const newFish = serverList.map(f => ({
           id: f.fishId,
           type: f.type || 'vector',
           imagePath: f.imageUrl || null,
@@ -115,18 +123,23 @@ Page({
           createTime: new Date(f.createdAt).getTime(),
           petCount: f.petCount || 0
         }))
+
+        if (this.page === 1) {
+          this.fishDataList = newFish
+        } else {
+          this.fishDataList = this.fishDataList.concat(newFish)
+        }
+
+        this.page++
         this._buildSwimmingFishes()
         this._startAnimation()
         this.setData({ loading: false })
         if (cb) cb()
       })
-      .catch((err) => {
-        console.error('拉取鱼列表失败:', err)
-        // 服务器不可用时回退到本地数据
-        this.fishDataList = app.globalData.fishList
-        this._buildSwimmingFishes()
-        this._startAnimation()
+      .catch(err => {
+        console.error('拉取公共池塘失败:', err)
         this.setData({ loading: false })
+        wx.showToast({ title: '加载失败', icon: 'none' })
         if (cb) cb()
       })
   },
@@ -137,13 +150,14 @@ Page({
     })
     this.setData({ fishCount: this.fishes.length })
 
+    // 为有图片的鱼加载远程图片
     this.fishes.forEach(fish => {
       if (fish.imagePath) {
         const img = this.canvas.createImage()
         img.onload = () => {
           fish.imageBitmap = img
         }
-        // 服务器返回的相对路径需要拼接地址
+        // imagePath 可能是相对路径如 /uploads/xxx.png，需要拼接服务器地址
         if (fish.imagePath.startsWith('/')) {
           img.src = api.getBaseUrl() + fish.imagePath
         } else {
@@ -200,7 +214,7 @@ Page({
     })
 
     if (closestFish) {
-      const pettedIds = wx.getStorageSync('pettedFishIds') || []
+      const pettedIds = wx.getStorageSync('publicPettedIds') || []
       this.setData({
         showFishInfo: true,
         selectedFish: {
@@ -216,6 +230,7 @@ Page({
       return
     }
 
+    // 未点中鱼，逃跑效果
     this.fishes.forEach(fish => {
       const dx = fish.x - x
       const dy = fish.y - y
@@ -236,15 +251,18 @@ Page({
     const fish = this.data.selectedFish
     if (!fish || this.data.hasPettedSelected) return
 
+    // 调用服务器 API
     api.petFish(fish.id)
       .then(res => {
+        // 更新本地游动鱼
         const swimFish = this.fishes.find(f => f.id === fish.id)
         if (swimFish) swimFish.petCount = res.petCount
 
-        const pettedIds = wx.getStorageSync('pettedFishIds') || []
+        // 记录本设备已摸过
+        const pettedIds = wx.getStorageSync('publicPettedIds') || []
         if (!pettedIds.includes(fish.id)) {
           pettedIds.push(fish.id)
-          wx.setStorageSync('pettedFishIds', pettedIds)
+          wx.setStorageSync('publicPettedIds', pettedIds)
         }
 
         this.setData({
@@ -270,11 +288,7 @@ Page({
     return '很久以前'
   },
 
-  goToDraw() {
-    wx.navigateTo({ url: '/pages/draw/draw' })
-  },
-
-  goToTank() {
-    wx.navigateTo({ url: '/pages/tank/tank' })
+  goBack() {
+    wx.navigateBack()
   }
 })

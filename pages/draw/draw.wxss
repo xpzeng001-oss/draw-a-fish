@@ -206,10 +206,35 @@
 .submit-bar {
   padding: 16rpx 30rpx 40rpx;
   background: #fff;
+  display: flex;
+  gap: 20rpx;
+}
+
+.btn-my-fish {
+  height: 88rpx;
+  padding: 0 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 44rpx;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-my-fish:active {
+  transform: scale(0.97);
+}
+
+.btn-my-fish text {
+  font-size: 28rpx;
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .btn-submit {
-  width: 100%;
+  flex: 1;
   height: 88rpx;
   display: flex;
   align-items: center;
@@ -264,9 +289,20 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
-.score-emoji {
-  font-size: 100rpx;
-  margin-bottom: 16rpx;
+.fish-preview-wrap {
+  width: 300rpx;
+  height: 200rpx;
+  margin: 0 auto 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+}
+
+.fish-preview {
+  width: 100%;
+  height: 100%;
 }
 
 .score-value {

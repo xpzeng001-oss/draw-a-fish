@@ -6,12 +6,12 @@
       <text class="stat-label">总鱼数</text>
     </view>
     <view class="stat-item">
-      <text class="stat-value">{{avgScore}}</text>
-      <text class="stat-label">平均分</text>
+      <text class="stat-value">{{totalPets}}</text>
+      <text class="stat-label">总摸鱼数</text>
     </view>
     <view class="stat-item">
-      <text class="stat-value">{{topScore}}</text>
-      <text class="stat-label">最高分</text>
+      <text class="stat-value">{{topPets}}</text>
+      <text class="stat-label">最受欢迎</text>
     </view>
   </view>
 
@@ -22,9 +22,10 @@
         <text>{{index < 3 ? medals[index] : index + 1}}</text>
       </view>
       
-      <!-- 鱼的预览 Canvas -->
+      <!-- 鱼的预览 -->
       <view class="fish-preview">
-        <canvas type="2d" id="fish-{{index}}" class="preview-canvas" style="width:100rpx;height:70rpx;"></canvas>
+        <image wx:if="{{item.imageUrl}}" class="preview-image" src="{{item.imageUrl}}" mode="aspectFit" />
+        <canvas wx:else type="2d" id="fish-{{index}}" class="preview-canvas" style="width:100rpx;height:70rpx;"></canvas>
       </view>
 
       <view class="fish-info">
@@ -34,9 +35,9 @@
         </view>
       </view>
 
-      <view class="fish-score" style="color:{{item.score >= 70 ? '#2ecc71' : item.score >= 55 ? '#f39c12' : '#e74c3c'}}">
-        <text class="score-num">{{item.score}}</text>
-        <text class="score-unit">分</text>
+      <view class="fish-score" style="color:{{item.petCount >= 10 ? '#2ecc71' : item.petCount >= 3 ? '#f39c12' : '#999'}}">
+        <text class="score-num">{{item.petCount || 0}}</text>
+        <text class="score-unit">次</text>
       </view>
 
       <!-- 删除按钮 -->

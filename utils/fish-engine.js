@@ -20,6 +20,7 @@ function createSwimmingFish(data, canvasW, canvasH, index) {
     facingRight: Math.random() > 0.5,
     scared: 0,
     name: data.name || '',
+    author: data.author || '',
     score: data.score || 0,
     createTime: data.createTime || 0,
     petCount: data.petCount || 0,

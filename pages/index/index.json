@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "🐟 一起画鱼",
-  "disableScroll": true
+  "disableScroll": true,
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "light"
 }

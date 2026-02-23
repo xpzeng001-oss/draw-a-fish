@@ -75,6 +75,9 @@
 
   <!-- 提交按钮 -->
   <view class="submit-bar">
+    <view class="btn-my-fish" bindtap="goToTank">
+      <text>我的鱼</text>
+    </view>
     <view class="btn-submit {{canSubmit ? '' : 'disabled'}}" bindtap="submitFish">
       <text>🐟 让它游起来！</text>
     </view>
@@ -83,10 +86,13 @@
   <!-- 评分弹窗 -->
   <view class="score-overlay" wx:if="{{showScore}}" bindtap="closeScore">
     <view class="score-card" catchtap="">
-      <view class="score-emoji">{{scoreEmoji}}</view>
+      <view class="fish-preview-wrap">
+        <image wx:if="{{fishPreview}}" class="fish-preview" src="{{fishPreview}}" mode="aspectFit" />
+      </view>
       <view class="score-value" style="color:{{scoreColor}}">{{score}}分</view>
       <view class="score-comment">{{scoreComment}}</view>
       <input class="fish-name-input" placeholder="给你的鱼取个名字" maxlength="8" value="{{fishName}}" bindinput="onNameInput" />
+      <input class="fish-name-input" placeholder="创作者名称（选填）" maxlength="10" value="{{authorName}}" bindinput="onAuthorInput" />
       <view class="score-actions">
         <view class="btn-action primary" bindtap="confirmFish">
           <text>放入鱼缸 🎉</text>

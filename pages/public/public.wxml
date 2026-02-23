@@ -5,7 +5,7 @@
   </view>
 
   <!-- 鱼缸 Canvas -->
-  <canvas type="2d" id="tankCanvas" class="tank-canvas" bindtouchstart="onTankTap"></canvas>
+  <canvas type="2d" id="publicCanvas" class="tank-canvas" bindtouchstart="onTankTap"></canvas>
 
   <!-- 气泡装饰 -->
   <view class="bubble-container">
@@ -16,14 +16,19 @@
 
   <!-- 底部沙地 -->
   <view class="sand-bottom">
-    <view class="seaweed" wx:for="{{6}}" wx:key="*this" 
+    <view class="seaweed" wx:for="{{6}}" wx:key="*this"
       style="left:{{item * 16 + 5}}%; height:{{60 + item * 15}}rpx; animation-delay:{{item * 0.4}}s;">
     </view>
   </view>
 
   <!-- 鱼数量统计 -->
   <view class="fish-count">
-    <text class="count-text">🌊 {{fishCount}} 条鱼在游泳</text>
+    <text class="count-text">🌊 公共池塘 · {{fishCount}} 条鱼</text>
+  </view>
+
+  <!-- 加载提示 -->
+  <view class="loading-tip" wx:if="{{loading}}">
+    <text>加载中...</text>
   </view>
 
   <!-- 鱼信息弹窗 -->
@@ -33,23 +38,11 @@
       <view class="fish-info-name">{{selectedFish.name}}</view>
       <view class="fish-info-author" wx:if="{{selectedFish.author}}">by {{selectedFish.author}}</view>
       <view class="fish-info-score">{{selectedFish.score}} 分</view>
-      <view class="fish-info-time">{{selectedFish.timeText}} 加入鱼缸</view>
+      <view class="fish-info-time">{{selectedFish.timeText}} 加入池塘</view>
       <view class="fish-info-pet-count">被摸了 {{selectedFish.petCount}} 次</view>
       <view class="fish-info-btn {{hasPettedSelected ? 'disabled' : ''}}" bindtap="petSelectedFish">
         {{hasPettedSelected ? '已摸过 ✓' : '摸一下 🐟'}}
       </view>
-    </view>
-  </view>
-
-  <!-- 底部操作栏 -->
-  <view class="bottom-bar">
-    <view class="btn-draw" bindtap="goToDraw">
-      <view class="btn-icon">✏️</view>
-      <text class="btn-text">画一条鱼</text>
-    </view>
-    <view class="btn-gallery" bindtap="goToTank">
-      <view class="btn-icon">🏆</view>
-      <text class="btn-text">排行榜</text>
     </view>
   </view>
 </view>
