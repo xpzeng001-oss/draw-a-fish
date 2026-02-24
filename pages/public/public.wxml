@@ -35,6 +35,7 @@
   <view class="fish-info-overlay" wx:if="{{showFishInfo}}" bindtap="closeFishInfo">
     <view class="fish-info-card" catchtap="">
       <view class="fish-info-close" bindtap="closeFishInfo">✕</view>
+      <view class="fish-info-no" wx:if="{{selectedFish.fishNo > 0}}">NO.{{selectedFish.fishNo}}</view>
       <view class="fish-info-name">{{selectedFish.name}}</view>
       <view class="fish-info-author" wx:if="{{selectedFish.author}}">by {{selectedFish.author}}</view>
       <view class="fish-info-score">{{selectedFish.score}} 分</view>

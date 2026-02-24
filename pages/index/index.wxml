@@ -27,9 +27,26 @@
     </view>
   </view> -->
 
+  <!-- 放生动画 -->
+  <block wx:if="{{releaseMode}}">
+    <view class="release-fish">
+      <image wx:if="{{releasePreview}}" src="{{releasePreview}}" mode="aspectFit" class="release-fish-img" />
+    </view>
+    <view class="release-ripple release-ripple-1"></view>
+    <view class="release-ripple release-ripple-2"></view>
+    <view class="release-ripple release-ripple-3"></view>
+    <view class="release-bubble release-bubble-1"></view>
+    <view class="release-bubble release-bubble-2"></view>
+    <view class="release-bubble release-bubble-3"></view>
+    <view class="release-bubble release-bubble-4"></view>
+    <view class="release-bubble release-bubble-5"></view>
+    <view class="release-bubble release-bubble-6"></view>
+    <view class="release-text">{{releaseText}}</view>
+  </block>
+
   <!-- 顶部栏 -->
-  <view class="top-bar">
-    <view class="fish-count">
+  <view class="top-bar" style="top:{{statusBarHeight + 8}}px;">
+    <view class="fish-count" catchtap="onCountTap">
       <text class="count-text">🌊 {{fishCount}} 条鱼在游泳</text>
     </view>
     <view class="btn-theme" bindtap="toggleTheme">
@@ -42,6 +59,7 @@
     <view class="fish-info-card" catchtap="">
       <view class="fish-info-close" bindtap="closeFishInfo">✕</view>
       <image wx:if="{{selectedFish.imageUrl}}" class="fish-info-image" src="{{selectedFish.imageUrl}}" mode="aspectFit" />
+      <view class="fish-info-no" wx:if="{{selectedFish.fishNo > 0}}">NO.{{selectedFish.fishNo}}</view>
       <view class="fish-info-name">{{selectedFish.name}}</view>
       <view class="fish-info-author" wx:if="{{selectedFish.author}}">by {{selectedFish.author}}</view>
       <view class="fish-info-score">{{selectedFish.score}} 分</view>
@@ -49,6 +67,31 @@
       <view class="fish-info-pet-count">被摸了 {{selectedFish.petCount}} 次</view>
       <view class="fish-info-btn {{hasPettedSelected ? 'disabled' : ''}}" bindtap="petSelectedFish">
         {{hasPettedSelected ? '已摸过 ✓' : '摸一下 🐟'}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 分享卡片弹窗 -->
+  <view class="share-overlay" wx:if="{{showShareCard}}" bindtap="closeShareCard">
+    <view class="share-card" catchtap="noop">
+      <view class="share-card-inner">
+        <!-- 装饰波浪 -->
+        <view class="share-wave share-wave-1"></view>
+        <view class="share-wave share-wave-2"></view>
+        <!-- 切换文案按钮 -->
+        <view class="share-switch-btn" catchtap="switchQuote">换一句</view>
+        <!-- 鱼图 -->
+        <view class="share-fish-wrap">
+          <image wx:if="{{shareFishPreview}}" class="share-fish-img" src="{{shareFishPreview}}" mode="aspectFit" />
+        </view>
+        <view class="share-fish-name">{{shareFishName}}</view>
+        <!-- 文案 -->
+        <view class="share-quote">{{shareQuote}}</view>
+        <view class="share-subtitle" wx:if="{{shareFishNo > 0}}">No.{{shareFishNo}} 已进入池塘</view>
+        <!-- 二维码 -->
+        <view class="share-qr-wrap">
+          <image class="share-qrcode" src="/images/qcord.png" mode="aspectFit" />
+        </view>
       </view>
     </view>
   </view>

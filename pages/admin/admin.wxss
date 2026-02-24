@@ -1,0 +1,136 @@
+.container {
+  min-height: 100vh;
+  background: #f0f4f8;
+}
+
+/* 密码验证 */
+.auth-panel {
+  padding: 200rpx 80rpx 0;
+  text-align: center;
+}
+
+.auth-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 60rpx;
+}
+
+.auth-input {
+  height: 88rpx;
+  border: 2rpx solid #ddd;
+  border-radius: 16rpx;
+  padding: 0 30rpx;
+  font-size: 30rpx;
+  background: #fff;
+  margin-bottom: 30rpx;
+}
+
+.auth-btn {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 16rpx;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+/* 统计栏 */
+.stat-bar {
+  padding: 20rpx 30rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #e8edf2;
+}
+
+.stat-text {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 鱼列表 */
+.fish-list {
+  height: calc(100vh - 80rpx);
+}
+
+.fish-card {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 30rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.fish-left {
+  flex-shrink: 0;
+  margin-right: 24rpx;
+}
+
+.fish-thumb {
+  width: 100rpx;
+  height: 80rpx;
+  border-radius: 12rpx;
+  background: #f8f9fa;
+}
+
+.fish-thumb-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+}
+
+.fish-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.fish-title {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-bottom: 8rpx;
+}
+
+.fish-no {
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #3498db;
+}
+
+.fish-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fish-meta {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.fish-del {
+  flex-shrink: 0;
+  padding: 12rpx 28rpx;
+  background: #ffeaea;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+.fish-del:active {
+  opacity: 0.7;
+}
+
+.load-more {
+  padding: 30rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+}

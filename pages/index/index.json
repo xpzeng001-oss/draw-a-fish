@@ -1,6 +1,6 @@
 {
-  "navigationBarTitleText": "画一条鱼",
+  "navigationStyle": "custom",
   "disableScroll": true,
-  "enablePullDownRefresh": true,
+  "enablePullDownRefresh": false,
   "backgroundTextStyle": "light"
 }

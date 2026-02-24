@@ -29,7 +29,7 @@ Page({
     authorName: '',
     fishPreview: '',
     fishNo: 0,
-    tipText: '画一条朝右游的鱼 🐟 发挥你的创意吧！'
+    tipText: '画一条朝右游的鱼 🐟 发挥你的创意吧！',
   },
 
   canvas: null,
@@ -226,9 +226,34 @@ Page({
         comment = '嗯...确定这是一条鱼吗？不过也放进去吧！'
       }
 
-      // 生成鱼的预览图
+      // 生成鱼的预览图（裁剪到内容区域）
+      const prevData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
+      const prevPx = prevData.data
+      const pcw = this.canvas.width, pch = this.canvas.height
+      let pMinX = pcw, pMaxX = 0, pMinY = pch, pMaxY = 0
+      for (let i = 0; i < prevPx.length; i += 4) {
+        if (prevPx[i + 3] > 20) {
+          const px = (i / 4) % pcw, py = Math.floor((i / 4) / pcw)
+          if (px < pMinX) pMinX = px
+          if (px > pMaxX) pMaxX = px
+          if (py < pMinY) pMinY = py
+          if (py > pMaxY) pMaxY = py
+        }
+      }
+      const pPad = 10 * this.dpr
+      pMinX = Math.max(0, pMinX - pPad)
+      pMinY = Math.max(0, pMinY - pPad)
+      pMaxX = Math.min(pcw - 1, pMaxX + pPad)
+      pMaxY = Math.min(pch - 1, pMaxY + pPad)
+
       wx.canvasToTempFilePath({
         canvas: this.canvas,
+        x: pMinX / this.dpr,
+        y: pMinY / this.dpr,
+        width: (pMaxX - pMinX + 1) / this.dpr,
+        height: (pMaxY - pMinY + 1) / this.dpr,
+        destWidth: pMaxX - pMinX + 1,
+        destHeight: pMaxY - pMinY + 1,
         success: (imgRes) => {
           wx.hideLoading()
           this.setData({
@@ -329,8 +354,7 @@ Page({
               petCount: 0
             }
             app.addFish(fishData)
-            wx.showToast({ title: `${name} 已放入鱼缸！`, icon: 'success', duration: 1500 })
-            setTimeout(() => wx.navigateBack(), 1500)
+            this._showReleaseAnimation(name, fishData.id)
           },
           fail: () => {
             this._addVectorFishFallback(name, bodyColor)
@@ -362,8 +386,7 @@ Page({
       petCount: 0
     }
     app.addFish(fishData)
-    wx.showToast({ title: '已放入鱼缸！', icon: 'success' })
-    setTimeout(() => wx.navigateBack(), 1500)
+    this._showReleaseAnimation(name, fishData.id)
   },
 
   redraw() {
@@ -384,6 +407,19 @@ Page({
 
   goToTank() {
     wx.navigateTo({ url: '/pages/myfish/myfish' })
+  },
+
+  _showReleaseAnimation(name, fishId) {
+    const noStr = this.data.fishNo > 0 ? `NO.${this.data.fishNo} ` : ''
+    app.globalData.releaseInfo = {
+      fishId: fishId,
+      fishNo: this.data.fishNo,
+      fishName: name,
+      fishPreview: this.data.fishPreview,
+      releaseText: `${noStr}${name} 已游入公共池塘！`
+    }
+    this.setData({ showScore: false })
+    wx.navigateBack()
   },
 
   _darkenColor(hex, amount) {

@@ -121,7 +121,8 @@ Page({
           author: f.author || '',
           score: f.score || 0,
           createTime: new Date(f.createdAt).getTime(),
-          petCount: f.petCount || 0
+          petCount: f.petCount || 0,
+          fishNo: f.fishNo || 0
         }))
 
         if (this.page === 1) {
@@ -219,6 +220,7 @@ Page({
         showFishInfo: true,
         selectedFish: {
           id: closestFish.id,
+          fishNo: closestFish.fishNo || 0,
           name: closestFish.name || '无名鱼',
           author: closestFish.author || '',
           score: closestFish.score,

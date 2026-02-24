@@ -112,6 +112,7 @@ Page({
             globalList.splice(gIndex, 1)
             wx.setStorageSync('fishList', globalList)
           }
+          api.deleteFish(fish.id).catch(err => console.error('服务器删除失败:', err))
           wx.showToast({ title: '已放生', icon: 'success' })
           this._loadFishList()
         }

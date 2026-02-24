@@ -4,7 +4,8 @@
     "pages/draw/draw",
     "pages/tank/tank",
     "pages/public/public",
-    "pages/myfish/myfish"
+    "pages/myfish/myfish",
+    "pages/admin/admin"
   ],
   "window": {
     "backgroundTextStyle": "dark",

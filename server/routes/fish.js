@@ -112,6 +112,19 @@ router.post('/:fishId/pet', async (req, res) => {
   }
 })
 
+// DELETE /api/fish/:fishId — 删除一条鱼
+router.delete('/:fishId', async (req, res) => {
+  try {
+    const fish = await Fish.findOneAndDelete({ fishId: req.params.fishId })
+    if (!fish) {
+      return res.status(404).json({ error: '鱼不存在' })
+    }
+    res.json({ deleted: true })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
 // POST /api/fish/clear — 清空所有鱼
 router.post('/clear', async (req, res) => {
   try {

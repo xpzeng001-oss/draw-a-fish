@@ -1,0 +1,44 @@
+<view class="container">
+  <!-- 密码验证 -->
+  <view class="auth-panel" wx:if="{{!authed}}">
+    <view class="auth-title">管理员验证</view>
+    <input class="auth-input" type="text" password placeholder="请输入管理密码" value="{{password}}" bindinput="onPwdInput" bindconfirm="doAuth" />
+    <view class="auth-btn" bindtap="doAuth">确认</view>
+  </view>
+
+  <!-- 管理面板 -->
+  <block wx:if="{{authed}}">
+    <view class="stat-bar">
+      <text class="stat-text">共 {{total}} 条鱼</text>
+    </view>
+
+    <scroll-view scroll-y class="fish-list" bindscrolltolower="loadMore">
+      <view class="fish-card" wx:for="{{fishList}}" wx:key="fishId">
+        <view class="fish-left">
+          <image wx:if="{{item.imageUrl}}" class="fish-thumb" src="{{baseUrl}}{{item.imageUrl}}" mode="aspectFit" />
+          <view wx:else class="fish-thumb fish-thumb-placeholder">🐟</view>
+        </view>
+        <view class="fish-info">
+          <view class="fish-title">
+            <text class="fish-no" wx:if="{{item.fishNo}}">NO.{{item.fishNo}}</text>
+            <text class="fish-name">{{item.name}}</text>
+          </view>
+          <view class="fish-meta">
+            <text wx:if="{{item.author}}">by {{item.author}} · </text>
+            <text>{{item.score}}分 · 被摸{{item.petCount}}次</text>
+          </view>
+        </view>
+        <view class="fish-del" catchtap="deleteFish" data-id="{{item.fishId}}" data-name="{{item.name}}">
+          删除
+        </view>
+      </view>
+
+      <view class="load-more" wx:if="{{hasMore}}">
+        <text>上拉加载更多</text>
+      </view>
+      <view class="load-more" wx:if="{{!hasMore && fishList.length > 0}}">
+        <text>没有更多了</text>
+      </view>
+    </scroll-view>
+  </block>
+</view>
