@@ -1,7 +1,13 @@
 {
   "description": "一起画鱼 - Draw a Fish 微信小程序",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      { "type": "folder", "value": "server" },
+      { "type": "file", "value": "server.zip" },
+      { "type": "file", "value": ".DS_Store" },
+      { "type": "file", "value": "seed-remote.js" },
+      { "type": "file", "value": "seed-new.js" }
+    ],
     "include": []
   },
   "setting": {

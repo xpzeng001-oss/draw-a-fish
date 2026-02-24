@@ -3,7 +3,8 @@ const api = require('./utils/api.js')
 App({
   globalData: {
     fishList: [],
-    maxFish: 30
+    maxFish: 30,
+    isDark: false
   },
 
   onLaunch() {

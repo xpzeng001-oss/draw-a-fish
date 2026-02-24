@@ -68,8 +68,12 @@ function petFish(fishId) {
   return request('/fish/' + fishId + '/pet', { method: 'POST' })
 }
 
+function getNextFishNumber() {
+  return request('/fish/next-number')
+}
+
 function getBaseUrl() {
   return BASE_URL.replace('/api', '')
 }
 
-module.exports = { getFishList, uploadFish, petFish, getBaseUrl }
+module.exports = { getFishList, uploadFish, petFish, getNextFishNumber, getBaseUrl }

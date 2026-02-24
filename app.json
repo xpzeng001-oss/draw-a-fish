@@ -3,14 +3,16 @@
     "pages/index/index",
     "pages/draw/draw",
     "pages/tank/tank",
-    "pages/public/public"
+    "pages/public/public",
+    "pages/myfish/myfish"
   ],
   "window": {
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#1a5276",
-    "navigationBarTitleText": "🐟 一起画鱼",
+    "navigationBarTitleText": "画一条鱼",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#0c2d48"
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
 }

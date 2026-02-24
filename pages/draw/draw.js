@@ -1,4 +1,5 @@
 const app = getApp()
+const api = require('../../utils/api.js')
 const fishEngine = require('../../utils/fish-engine.js')
 
 Page({
@@ -27,6 +28,7 @@ Page({
     fishName: '',
     authorName: '',
     fishPreview: '',
+    fishNo: 0,
     tipText: '画一条朝右游的鱼 🐟 发挥你的创意吧！'
   },
 
@@ -194,6 +196,11 @@ Page({
     if (!this.data.canSubmit) return
 
     wx.showLoading({ title: '正在评分...' })
+
+    // 获取下一条鱼的编号
+    api.getNextFishNumber().then(res => {
+      this.setData({ fishNo: res.nextNo })
+    }).catch(() => {})
 
     // 获取画布数据进行评分
     setTimeout(() => {
@@ -376,7 +383,7 @@ Page({
   },
 
   goToTank() {
-    wx.navigateBack()
+    wx.navigateTo({ url: '/pages/myfish/myfish' })
   },
 
   _darkenColor(hex, amount) {

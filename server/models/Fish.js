@@ -15,6 +15,7 @@ const fishSchema = new mongoose.Schema({
   name: { type: String, default: '无名小鱼' },
   author: { type: String, default: '' },
   score: { type: Number, default: 0 },
+  fishNo: { type: Number, default: 0 },
   petCount: { type: Number, default: 0 }
 }, {
   timestamps: true

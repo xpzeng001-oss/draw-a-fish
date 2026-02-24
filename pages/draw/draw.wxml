@@ -20,7 +20,7 @@
     </view>
     <!-- 鱼朝向提示 -->
     <view class="direction-hint">
-      <text>→ 请画朝右的鱼</text>
+      <text>← 请画鱼头朝左的鱼</text>
     </view>
   </view>
 
@@ -89,6 +89,7 @@
       <view class="fish-preview-wrap">
         <image wx:if="{{fishPreview}}" class="fish-preview" src="{{fishPreview}}" mode="aspectFit" />
       </view>
+      <view class="fish-no" wx:if="{{fishNo > 0}}">NO.{{fishNo}}</view>
       <view class="score-value" style="color:{{scoreColor}}">{{score}}分</view>
       <view class="score-comment">{{scoreComment}}</view>
       <input class="fish-name-input" placeholder="给你的鱼取个名字" maxlength="8" value="{{fishName}}" bindinput="onNameInput" />

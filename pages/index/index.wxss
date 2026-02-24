@@ -3,10 +3,10 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: linear-gradient(180deg, 
-    #0a1628 0%, 
+  background: linear-gradient(180deg,
+    #0a1628 0%,
     #0d2847 15%,
-    #134b7a 40%, 
+    #134b7a 40%,
     #1a6da8 65%,
     #2089c9 85%,
     #1a6da8 100%
@@ -87,28 +87,54 @@
   z-index: 1;
 }
 
-.seaweed {
+.seaweed-group {
   position: absolute;
   bottom: 0;
-  width: 16rpx;
-  border-radius: 20rpx 20rpx 0 0;
-  background: linear-gradient(180deg, #2ecc71 0%, #27ae60 50%, #1e8449 100%);
+  display: flex;
+  align-items: flex-end;
+}
+
+.seaweed-leaf {
+  border-radius: 40rpx 40rpx 4rpx 4rpx;
   transform-origin: bottom center;
-  animation: seaweedSway 3s ease-in-out infinite alternate;
+  animation: seaweedSway ease-in-out infinite alternate;
+}
+
+.seaweed-leaf.thin {
+  width: 10rpx;
+  background: linear-gradient(180deg, #58d68d 0%, #2ecc71 40%, #1a9c56 100%);
+  opacity: 0.8;
+}
+
+.seaweed-leaf.mid {
+  width: 16rpx;
+  background: linear-gradient(180deg, #45b87a 0%, #27ae60 40%, #1e8449 100%);
+  opacity: 0.9;
+}
+
+.seaweed-leaf.wide {
+  width: 22rpx;
+  background: linear-gradient(180deg, #2ecc71 0%, #1fa855 40%, #196f3d 100%);
 }
 
 @keyframes seaweedSway {
-  0% { transform: rotate(-8deg) scaleX(0.9); }
-  100% { transform: rotate(8deg) scaleX(1.1); }
+  0% { transform: rotate(-10deg); }
+  100% { transform: rotate(10deg); }
 }
 
 /* 鱼数量 */
-.fish-count {
+.top-bar {
   position: absolute;
   top: 20rpx;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 24rpx;
+  right: 24rpx;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fish-count {
   background: rgba(0,0,0,0.3);
   padding: 10rpx 30rpx;
   border-radius: 30rpx;
@@ -119,6 +145,21 @@
   font-size: 24rpx;
   color: rgba(255,255,255,0.85);
   letter-spacing: 2rpx;
+}
+
+.btn-theme {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.3);
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+}
+
+.btn-theme text {
+  font-size: 32rpx;
 }
 
 /* 底部操作栏 */
@@ -134,14 +175,15 @@
 
 .btn-draw, .btn-gallery {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 200rpx;
-  height: 160rpx;
-  border-radius: 30rpx;
+  padding: 0 36rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
   backdrop-filter: blur(20px);
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .btn-draw {
@@ -162,8 +204,13 @@
 }
 
 .btn-icon {
-  font-size: 52rpx;
-  margin-bottom: 8rpx;
+  font-size: 36rpx;
+  margin-right: 10rpx;
+}
+
+.btn-icon-flip {
+  display: inline-block;
+  transform: scaleX(-1);
 }
 
 .btn-text {
@@ -213,6 +260,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.fish-info-image {
+  width: 240rpx;
+  height: 180rpx;
+  margin-bottom: 16rpx;
+  border-radius: 16rpx;
 }
 
 .fish-info-name {
@@ -269,4 +323,49 @@
   background: #ccc;
   box-shadow: none;
   color: #fff;
+}
+
+/* 浅色主题 */
+.theme-light {
+  background: linear-gradient(180deg,
+    #87CEEB 0%,
+    #98D8EF 15%,
+    #B0E2F5 40%,
+    #C8ECF9 65%,
+    #D6F1FC 85%,
+    #C8ECF9 100%
+  );
+}
+
+.theme-light .sand-bottom {
+  background: linear-gradient(0deg, #f0d9a0 0%, #e8cc8a 60%, transparent 100%);
+}
+
+.theme-light .fish-count {
+  background: rgba(255,255,255,0.6);
+}
+
+.theme-light .count-text {
+  color: rgba(0,0,0,0.7);
+}
+
+.theme-light .btn-theme {
+  background: rgba(255,255,255,0.6);
+}
+
+.theme-light .bottom-bar {
+  background: transparent;
+  border-top: none;
+  box-shadow: none;
+}
+
+.theme-light .btn-draw,
+.theme-light .btn-gallery {
+  background: rgba(255,255,255,0.75);
+  border: 1rpx solid rgba(255,255,255,0.9);
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.08);
+}
+
+.theme-light .btn-text {
+  color: #445;
 }

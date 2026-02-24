@@ -9,7 +9,8 @@ Page({
     showFishInfo: false,
     selectedFish: null,
     hasPettedSelected: false,
-    loading: false
+    loading: false,
+    isDark: false
   },
 
   canvas: null,
@@ -23,6 +24,7 @@ Page({
 
   onLoad() {
     this._generateBubbles()
+    this._generateSeaweeds()
   },
 
   onShow() {
@@ -66,6 +68,22 @@ Page({
       })
     }
     this.setData({ bubbles })
+  },
+
+  _generateSeaweeds() {
+    const types = ['thin', 'mid', 'wide']
+    const seaweeds = []
+    for (let i = 0; i < 10; i++) {
+      seaweeds.push({
+        id: i,
+        x: i * 10 + 2 + Math.random() * 5,
+        h: 60 + Math.random() * 80,
+        delay: Math.random() * 2,
+        dur: 2.5 + Math.random() * 2,
+        type: types[Math.floor(Math.random() * 3)]
+      })
+    }
+    this.setData({ seaweeds })
   },
 
   _initCanvas() {
@@ -169,6 +187,7 @@ Page({
     this.fishes.forEach(fish => {
       fishEngine.updateFish(fish, w, h)
     })
+    fishEngine.ensureVisibleFish(this.fishes, w, h)
   },
 
   _draw() {
@@ -209,7 +228,8 @@ Page({
           author: closestFish.author || '',
           score: closestFish.score,
           petCount: closestFish.petCount || 0,
-          timeText: this._formatTime(closestFish.createTime)
+          timeText: this._formatTime(closestFish.createTime),
+          imageUrl: closestFish.imagePath ? (closestFish.imagePath.startsWith('/') ? api.getBaseUrl() + closestFish.imagePath : closestFish.imagePath) : ''
         },
         hasPettedSelected: pettedIds.includes(closestFish.id)
       })
@@ -276,5 +296,11 @@ Page({
 
   goToTank() {
     wx.navigateTo({ url: '/pages/tank/tank' })
+  },
+
+  toggleTheme() {
+    const isDark = !this.data.isDark
+    this.setData({ isDark })
+    app.globalData.isDark = isDark
   }
 })

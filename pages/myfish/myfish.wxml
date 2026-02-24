@@ -1,0 +1,40 @@
+<view class="container">
+  <!-- 鱼列表 -->
+  <scroll-view class="fish-list" scroll-y enhanced show-scrollbar="{{false}}">
+   <view class="fish-list-inner">
+    <view class="fish-card" wx:for="{{fishList}}" wx:key="id">
+      <view class="fish-preview">
+        <image wx:if="{{item.imageUrl || item.imagePath}}" class="preview-image" src="{{item.imageUrl || item.imagePath}}" mode="aspectFit" />
+      </view>
+
+      <view class="fish-info">
+        <view class="fish-name">{{item.name || '无名小鱼'}}</view>
+        <view class="fish-meta">
+          <text class="fish-time">{{item.timeText}}</text>
+          <text class="fish-pet" wx:if="{{item.petCount}}">被摸{{item.petCount}}次</text>
+        </view>
+      </view>
+
+      <view class="delete-btn" bindtap="deleteFish" data-index="{{index}}">
+        <text>删除</text>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{fishList.length === 0}}">
+      <text class="empty-icon">🐟</text>
+      <text class="empty-text">你还没有画过鱼</text>
+      <text class="empty-hint">去画一条吧！</text>
+    </view>
+   </view>
+  </scroll-view>
+
+  <!-- 底部操作 -->
+  <view class="bottom-actions">
+    <view class="btn-back" bindtap="goBack">
+      <text>返回</text>
+    </view>
+    <view class="btn-draw" bindtap="goToDraw">
+      <text>再画一条</text>
+    </view>
+  </view>
+</view>

@@ -1,4 +1,4 @@
-<view class="container">
+<view class="container {{isDark ? '' : 'theme-light'}}">
   <!-- 水面光效 -->
   <view class="water-surface">
     <view class="light-ray" wx:for="{{5}}" wx:key="*this" style="left:{{item * 20 + 5}}%; animation-delay:{{item * 0.6}}s;"></view>
@@ -15,21 +15,33 @@
   </view>
 
   <!-- 底部沙地 -->
-  <view class="sand-bottom">
-    <view class="seaweed" wx:for="{{6}}" wx:key="*this" 
-      style="left:{{item * 16 + 5}}%; height:{{60 + item * 15}}rpx; animation-delay:{{item * 0.4}}s;">
+  <!-- <view class="sand-bottom">
+    <view class="seaweed-group" wx:for="{{seaweeds}}" wx:key="id"
+      style="left:{{item.x}}%;">
+      <view class="seaweed-leaf {{item.type}}"
+        style="height:{{item.h}}rpx; animation-delay:{{item.delay}}s; animation-duration:{{item.dur}}s;">
+      </view>
+      <view class="seaweed-leaf {{item.type}}" wx:if="{{item.h > 80}}"
+        style="height:{{item.h * 0.7}}rpx; animation-delay:{{item.delay + 0.3}}s; animation-duration:{{item.dur + 0.5}}s; transform: translateX(-8rpx) rotate(-5deg);">
+      </view>
     </view>
-  </view>
+  </view> -->
 
-  <!-- 鱼数量统计 -->
-  <view class="fish-count">
-    <text class="count-text">🌊 {{fishCount}} 条鱼在游泳</text>
+  <!-- 顶部栏 -->
+  <view class="top-bar">
+    <view class="fish-count">
+      <text class="count-text">🌊 {{fishCount}} 条鱼在游泳</text>
+    </view>
+    <view class="btn-theme" bindtap="toggleTheme">
+      <text>{{isDark ? '☀️' : '🌙'}}</text>
+    </view>
   </view>
 
   <!-- 鱼信息弹窗 -->
   <view class="fish-info-overlay" wx:if="{{showFishInfo}}" bindtap="closeFishInfo">
     <view class="fish-info-card" catchtap="">
       <view class="fish-info-close" bindtap="closeFishInfo">✕</view>
+      <image wx:if="{{selectedFish.imageUrl}}" class="fish-info-image" src="{{selectedFish.imageUrl}}" mode="aspectFit" />
       <view class="fish-info-name">{{selectedFish.name}}</view>
       <view class="fish-info-author" wx:if="{{selectedFish.author}}">by {{selectedFish.author}}</view>
       <view class="fish-info-score">{{selectedFish.score}} 分</view>
@@ -44,7 +56,7 @@
   <!-- 底部操作栏 -->
   <view class="bottom-bar">
     <view class="btn-draw" bindtap="goToDraw">
-      <view class="btn-icon">✏️</view>
+      <view class="btn-icon btn-icon-flip">✏️</view>
       <text class="btn-text">画一条鱼</text>
     </view>
     <view class="btn-gallery" bindtap="goToTank">

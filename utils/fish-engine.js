@@ -3,7 +3,9 @@
  */
 
 function createSwimmingFish(data, canvasW, canvasH, index) {
-  const baseSize = 28 * (data.size || 1)
+  // 将 size 压缩到 0.95~1.05，让所有鱼视觉大小接近
+  const sizeVal = 0.95 + Math.min(Math.max((data.size || 1) - 0.8, 0), 0.4) * 0.25
+  const baseSize = 28 * 1.6 * sizeVal
   return {
     id: data.id || 'fish_' + index,
     x: Math.random() * (canvasW - 80) + 40,
@@ -55,13 +57,13 @@ function updateFish(fish, canvasW, canvasH) {
     fish.vy += (Math.random() - 0.5) * 0.3
   }
 
-  // 边界循环：游出一侧从另一侧回来
-  const padX = fish.bodyW
-  const padY = fish.bodyH
-  if (fish.x < -padX) { fish.x = canvasW + padX; }
-  if (fish.x > canvasW + padX) { fish.x = -padX; }
-  if (fish.y < -padY) { fish.y = canvasH - 140; }
-  if (fish.y > canvasH - 140) { fish.y = -padY; }
+  // 边界循环：左右穿越，上下限制不出屏
+  const padX = fish.bodyW * 0.3
+  const topLimit = 80  // 顶部安全区，避免遮挡UI
+  if (fish.x < -padX) { fish.x = canvasW + padX * 0.5; }
+  if (fish.x > canvasW + padX) { fish.x = -padX * 0.5; }
+  if (fish.y < topLimit) { fish.y = topLimit; fish.vy = Math.abs(fish.vy) * 0.5; }
+  if (fish.y > canvasH - 140) { fish.y = canvasH - 140; fish.vy = -Math.abs(fish.vy) * 0.5; }
 
   // 确保最低速度
   if (Math.abs(fish.vx) < 0.2) {
@@ -190,17 +192,17 @@ function _drawImageFish(ctx, fish) {
   ctx.save()
   ctx.translate(fish.x, fish.y)
 
-  if (!fish.facingRight) {
-    ctx.scale(-1, 1)
+  // 服务器假鱼图片朝左，游向右时翻转；用户画的鱼不翻转
+  const isServerFish = fish.imagePath && fish.imagePath.startsWith('/')
+  if (isServerFish) {
+    if (fish.facingRight) {
+      ctx.scale(-1, 1)
+    }
   }
-
-  // 尾巴摆动带动身体轻微旋转
-  ctx.rotate(fish.tailAngle * 0.15)
 
   const w = fish.bodyW
   const h = fish.bodyH
   const img = fish.imageBitmap
-  // 按比例缩放，保持画作原始比例
   const imgAspect = img.width / img.height
   let drawW = w
   let drawH = w / imgAspect
@@ -209,7 +211,26 @@ function _drawImageFish(ctx, fish) {
     drawW = h * imgAspect
   }
 
-  ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH)
+  // 分段绘制：将鱼图片切成竖条，从头到尾施加递增的正弦波偏移
+  // 图片默认朝左，左侧=头，右侧=尾
+  const segs = 8
+  const segW = drawW / segs
+  const srcSegW = img.width / segs
+
+  for (let i = 0; i < segs; i++) {
+    // t: 0=头部, 1=尾部
+    const t = i / (segs - 1)
+    // 振幅从头到尾二次方递增，头部几乎不动，尾部摆幅最大
+    const amp = t * t * drawH * 0.08
+    const wave = Math.sin(fish.tailPhase + t * 2.5) * amp
+
+    ctx.drawImage(
+      img,
+      i * srcSegW, 0, srcSegW, img.height,
+      -drawW / 2 + i * segW, -drawH / 2 + wave, segW + 1, drawH
+    )
+  }
+
   ctx.restore()
 }
 
@@ -315,9 +336,37 @@ function evaluateFishScore(imageData, width, height) {
   return Math.min(99, Math.max(10, score + Math.floor(Math.random() * 10)))
 }
 
+/**
+ * 保底检查：确保池塘里始终有足够可见的鱼
+ * 在每帧 updateFish 循环之后调用一次
+ */
+function ensureVisibleFish(fishes, canvasW, canvasH, minVisible) {
+  minVisible = minVisible || Math.max(2, Math.ceil(fishes.length * 0.4))
+  let visibleCount = 0
+  const offscreen = []
+
+  for (let i = 0; i < fishes.length; i++) {
+    const f = fishes[i]
+    if (f.x > 0 && f.x < canvasW && f.y > 0 && f.y < canvasH - 140) {
+      visibleCount++
+    } else {
+      offscreen.push(f)
+    }
+  }
+
+  // 可见鱼不够时，把屏幕外的鱼拉回来
+  while (visibleCount < minVisible && offscreen.length > 0) {
+    const f = offscreen.pop()
+    f.x = Math.random() * (canvasW * 0.6) + canvasW * 0.2
+    f.y = Math.random() * (canvasH * 0.5) + canvasH * 0.1
+    visibleCount++
+  }
+}
+
 module.exports = {
   createSwimmingFish,
   updateFish,
   drawVectorFish,
-  evaluateFishScore
+  evaluateFishScore,
+  ensureVisibleFish
 }

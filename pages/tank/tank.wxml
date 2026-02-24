@@ -1,4 +1,4 @@
-<view class="container">
+<view class="container {{isDark ? '' : 'theme-light'}}">
   <!-- 统计面板 -->
   <view class="stats-panel">
     <view class="stat-item">
@@ -17,15 +17,16 @@
 
   <!-- 鱼列表 -->
   <scroll-view class="fish-list" scroll-y enhanced show-scrollbar="{{false}}">
+   <view class="fish-list-inner">
     <view class="fish-card" wx:for="{{fishList}}" wx:key="id">
       <view class="rank-badge rank-{{index < 3 ? index + 1 : 'normal'}}">
         <text>{{index < 3 ? medals[index] : index + 1}}</text>
       </view>
-      
+
       <!-- 鱼的预览 -->
       <view class="fish-preview">
         <image wx:if="{{item.imageUrl}}" class="preview-image" src="{{item.imageUrl}}" mode="aspectFit" />
-        <canvas wx:else type="2d" id="fish-{{index}}" class="preview-canvas" style="width:100rpx;height:70rpx;"></canvas>
+        <canvas wx:else type="2d" id="fish-{{index}}" class="preview-canvas" style="width:120rpx;height:90rpx;"></canvas>
       </view>
 
       <view class="fish-info">
@@ -39,11 +40,6 @@
         <text class="score-num">{{item.petCount || 0}}</text>
         <text class="score-unit">次</text>
       </view>
-
-      <!-- 删除按钮 -->
-      <view class="delete-btn" bindtap="deleteFish" data-index="{{index}}">
-        <text>×</text>
-      </view>
     </view>
 
     <view class="empty-state" wx:if="{{fishList.length === 0}}">
@@ -55,15 +51,16 @@
     <view class="list-footer" wx:if="{{fishList.length > 0}}">
       <text>共 {{totalFish}} 条鱼</text>
     </view>
+   </view>
   </scroll-view>
 
   <!-- 底部操作 -->
   <view class="bottom-actions">
     <view class="btn-back" bindtap="goBack">
-      <text>🐠 回到鱼缸</text>
+      <text>回到鱼缸</text>
     </view>
     <view class="btn-draw" bindtap="goToDraw">
-      <text>✏️ 再画一条</text>
+      <text>再画一条</text>
     </view>
   </view>
 </view>

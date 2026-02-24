@@ -2,6 +2,7 @@ const express = require('express')
 const multer = require('multer')
 const path = require('path')
 const Fish = require('../models/Fish')
+const Counter = require('../models/Counter')
 const config = require('../config')
 
 const router = express.Router()
@@ -38,6 +39,25 @@ router.get('/', async (req, res) => {
   }
 })
 
+// GET /api/fish/next-number — 获取下一条鱼的编号
+router.get('/next-number', async (req, res) => {
+  try {
+    let counter = await Counter.findById('fishNo')
+    if (!counter) {
+      // 首次运行，用当前鱼数量初始化计数器
+      const total = await Fish.countDocuments()
+      counter = await Counter.findByIdAndUpdate(
+        'fishNo',
+        { $set: { seq: total } },
+        { new: true, upsert: true }
+      )
+    }
+    res.json({ nextNo: counter.seq + 1 })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
 // POST /api/fish — 上传一条新鱼
 router.post('/', upload.single('image'), async (req, res) => {
   try {
@@ -55,6 +75,14 @@ router.post('/', upload.single('image'), async (req, res) => {
       score: data.score || 0,
       petCount: 0
     }
+
+    // 自增编号
+    const counter = await Counter.findByIdAndUpdate(
+      'fishNo',
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    )
+    fishDoc.fishNo = counter.seq
 
     if (req.file) {
       fishDoc.imageUrl = '/uploads/' + req.file.filename
@@ -79,6 +107,16 @@ router.post('/:fishId/pet', async (req, res) => {
       return res.status(404).json({ error: '鱼不存在' })
     }
     res.json({ petCount: fish.petCount })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// POST /api/fish/clear — 清空所有鱼
+router.post('/clear', async (req, res) => {
+  try {
+    const result = await Fish.deleteMany({})
+    res.json({ deleted: result.deletedCount })
   } catch (err) {
     res.status(500).json({ error: err.message })
   }

@@ -8,10 +8,12 @@ Page({
     totalFish: 0,
     totalPets: 0,
     topPets: 0,
-    medals: ['🥇', '🥈', '🥉']
+    medals: ['🥇', '🥈', '🥉'],
+    isDark: false
   },
 
   onShow() {
+    this.setData({ isDark: app.globalData.isDark })
     this._loadFishList()
   },
 
@@ -35,13 +37,11 @@ Page({
         this._renderList(list)
       })
       .catch(() => {
-        // 回退本地数据
         this._renderList(app.globalData.fishList.slice())
       })
   },
 
   _renderList(fishList) {
-    // 按被摸次数排序
     fishList.sort((a, b) => (b.petCount || 0) - (a.petCount || 0))
 
     fishList.forEach(f => {
@@ -66,7 +66,7 @@ Page({
     const fishList = this.data.fishList
     fishList.forEach((fish, index) => {
       if (index > 15) return
-      if (fish.imageUrl) return // 图片鱼用 <image> 显示，跳过 canvas
+      if (fish.imageUrl) return
 
       const query = wx.createSelectorQuery()
       query.select(`#fish-${index}`)
@@ -84,7 +84,6 @@ Page({
           const w = res[0].width
           const h = res[0].height
 
-          // 绘制小鱼预览
           const swimFish = fishEngine.createSwimmingFish(fish, w, h, index)
           swimFish.x = w / 2
           swimFish.y = h / 2
