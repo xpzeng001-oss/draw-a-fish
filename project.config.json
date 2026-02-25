@@ -2,11 +2,26 @@
   "description": "一起画鱼 - Draw a Fish 微信小程序",
   "packOptions": {
     "ignore": [
-      { "type": "folder", "value": "server" },
-      { "type": "file", "value": "server.zip" },
-      { "type": "file", "value": ".DS_Store" },
-      { "type": "file", "value": "seed-remote.js" },
-      { "type": "file", "value": "seed-new.js" }
+      {
+        "value": "server",
+        "type": "folder"
+      },
+      {
+        "value": "server.zip",
+        "type": "file"
+      },
+      {
+        "value": ".DS_Store",
+        "type": "file"
+      },
+      {
+        "value": "seed-remote.js",
+        "type": "file"
+      },
+      {
+        "value": "seed-new.js",
+        "type": "file"
+      }
     ],
     "include": []
   },
@@ -55,7 +70,7 @@
     "disableSWC": true
   },
   "compileType": "miniprogram",
-  "libVersion": "3.3.4",
+  "libVersion": "3.14.2",
   "appid": "wx1a6d00834eccf7f9",
   "projectname": "draw-a-fish",
   "condition": {},

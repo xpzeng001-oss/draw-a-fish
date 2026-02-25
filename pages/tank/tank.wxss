@@ -39,6 +39,7 @@
 .fish-list {
   flex: 1;
   padding: 0;
+  height: 0;
 }
 
 .fish-list-inner {
@@ -209,6 +210,7 @@
   display: flex;
   gap: 20rpx;
   padding: 20rpx 30rpx 50rpx;
+  background: transparent;
 }
 
 .btn-back, .btn-draw {
@@ -242,7 +244,7 @@
 
 /* 浅色主题 */
 .theme-light {
-  background: linear-gradient(180deg, #87CEEB 0%, #B0E2F5 50%, #C8ECF9 100%);
+  background: linear-gradient(180deg, #87CEEB 0%, #98D8EF 15%, #B0E2F5 40%, #C8ECF9 65%, #D6F1FC 85%, #C8ECF9 100%);
 }
 
 .theme-light .stats-panel {

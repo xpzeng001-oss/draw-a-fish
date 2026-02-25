@@ -49,9 +49,12 @@
     <view class="fish-count" catchtap="onCountTap">
       <text class="count-text">🌊 {{fishCount}} 条鱼在游泳</text>
     </view>
-    <view class="btn-theme" bindtap="toggleTheme">
+    <view class="btn-theme" catchtap="toggleTheme">
       <text>{{isDark ? '☀️' : '🌙'}}</text>
     </view>
+    <button class="btn-share" open-type="share">
+      <text>📤</text>
+    </button>
   </view>
 
   <!-- 鱼信息弹窗 -->

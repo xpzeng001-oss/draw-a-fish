@@ -372,7 +372,7 @@ Page({
         shareFishPreview: info.fishPreview || '',
         shareQuote: SHARE_QUOTES[Math.floor(Math.random() * SHARE_QUOTES.length)]
       })
-    }, 3500)
+    }, 5500)
   },
 
   closeShareCard() {
@@ -415,5 +415,12 @@ Page({
     const isDark = !this.data.isDark
     this.setData({ isDark })
     app.globalData.isDark = isDark
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '来画一条鱼，放进公共池塘吧',
+      path: '/pages/index/index'
+    }
   }
 })
